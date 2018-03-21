@@ -1,5 +1,19 @@
 FROM phusion/baseimage
 
-RUN apt-get update -qq
+# Install Docker
+ENV DOCKER_VERSION 17.12.0
+RUN apt-get update -qq && apt-get install -qy \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+RUN apt-get update -qq && apt-get install -qy docker-ce=${DOCKER_VERSION}~ce-0~ubuntu 
+
+# Install AWS CLI
 RUN apt-get install -qy python-pip groff-base
 RUN pip install awscli
